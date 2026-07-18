@@ -53,23 +53,22 @@ CREATE TABLE cust_detail (
 
 -- copy credit_card_details table
 
-LOAD DATA LOCAL INFILE 'D:\Resume\Data Analytics\Project\Credit-Card-Performance-Analytics\dataset\credit_card_transactions.csv'
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/credit_card_transactions.csv'
 INTO TABLE credit_card_details
 FIELDS TERMINATED BY ','
-LINES TERMINATED BY '\n'
+OPTIONALLY ENCLOSED BY '"'
 IGNORE 1 ROWS;
 
 
 -- copy cust_detail table
 
-LOAD DATA LOCAL INFILE 'D:\Resume\Data Analytics\Project\Credit-Card-Performance-Analytics\dataset\customer_details.csv'
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/customer_details.csv'
 INTO TABLE cust_detail
 FIELDS TERMINATED BY ','
-LINES TERMINATED BY '\n'
+OPTIONALLY ENCLOSED BY '"'
 IGNORE 1 ROWS;
 
 
+SELECT * FROM credit_card_details;
 
-SELECT VERSION();
 
-select * from credit_card_details;

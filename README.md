@@ -39,29 +39,68 @@ Moving from manual CSV analysis to a MySQL-to-Power BI pipeline automates the pa
 
 Cost reduction and customer experience improvements would depend on how this is deployed inside an actual business (e.g., reduced analyst hours, faster response to at-risk segments) — this project demonstrates the reporting foundation those gains would be built on, rather than measuring them directly, since it runs on synthetic data.
 
-## System Architecture & Data Flow
+## Business Insights
 
-The pipeline has two layers: storage and reporting.
+The Credit Card Analytics Dashboard provides an executive-level view of customer behavior, transaction performance, revenue generation, and portfolio health. Built in Power BI, it lets stakeholders monitor KPIs, identify revenue drivers, and support data-driven decisions across the business.
 
-**1. Storage layer (MySQL)**
-The data is held in two MySQL tables:
-- `cust_detail` — one row per customer, holding demographic and profile attributes
-- `credit_card_details` — one row per customer per week, holding card, credit, and transaction attributes
+![Customer Analytics Report](reports/customer-dashboard.png)
 
-Both tables share `Client_Num` as a common key, giving a 1:1 relationship between a customer and their card/transaction record.
+### Executive Summary
 
-**2. Reporting layer (Power BI)**
-Power BI connects directly to the MySQL database and imports both tables. The relationship on `Client_Num` is preserved in the model, and a calculated `AgeGroup` column is added on the customer table for demographic bucketing. From this model, two report pages are built:
-- **Customer Analytics** — revenue and risk viewed through the customer lens (age, income, occupation, marital status, state)
-- **Transaction Analytics** — revenue and volume viewed through the transaction lens (card category, payment method, expenditure type, quarter)
+**Week-over-Week Performance**
+Revenue increased by 28.8% compared to the previous week, indicating positive business growth. During the same period, total transaction amount, transaction count, and customer count increased by XX%, XX%, and XX% respectively, reflecting improved customer engagement and spending activity.
 
-Shared slicers (quarter, week, card category, gender) let a user filter both the customer and transaction context consistently across either page.
+**Year-to-Date Performance**
+- Total Revenue: 55.3M
+- Interest Earned: 7.84M
+- Total Transaction Amount: 45M
+- Total Transactions: 656K
+- Customer Income: 576M
+- Average Customer Satisfaction Score: 3.19 / 5
 
-As new weekly data is added to the MySQL database, the report reflects it on refresh, so the dashboards stay current without rebuilding the model.
+### Revenue & Customer Insights
 
-```
-MySQL database → Power BI (Import, 1:1 relationship on Client_Num) → Two report pages
-```
+- Male customers generated approximately 54% of total revenue (30M), while female customers contributed around 46% (25M), highlighting a slightly stronger spending pattern among male cardholders.
+- Blue and Silver credit cards account for nearly 93% of total transaction revenue, making them the primary revenue-generating products despite being entry-level card offerings.
+- Gold and Platinum cards contribute a comparatively smaller share, presenting an opportunity to improve premium card adoption and customer upgrades.
+
+### Geographic Performance
+
+Revenue is concentrated across a few high-performing states — Texas, New York, and California — which together contribute approximately 68% of overall revenue, indicating strong regional concentration and potential opportunities for market expansion into lower-performing regions.
+
+### Customer Segmentation Insights
+
+The dashboard enables revenue analysis across multiple customer dimensions:
+- Business professionals represent the highest revenue-generating occupation.
+- Customers aged 40–60 years contribute the largest share of revenue.
+- Graduate degree holders generate the highest revenue among education groups.
+- High-income customers contribute significantly more revenue than medium- and low-income segments.
+- Married customers slightly outperform single customers in overall spending.
+
+These insights support targeted marketing campaigns and customer segmentation strategies.
+
+![Transaction Analytics Report](reports/transaction-dashboard.png)
+
+### Transaction Insights
+
+- Swipe transactions account for the vast majority of payment revenue, significantly outperforming Chip and Online payment methods.
+- Spending is concentrated in essential categories such as Bills, Entertainment, Fuel, Grocery, and Food, providing valuable insight into customer purchasing behavior.
+
+### Portfolio Health
+
+- Card Activation Rate: 57.5%
+- Overall Delinquency Rate: 6.06%
+
+While the activation rate indicates healthy customer onboarding, nearly 42% of issued cards remain inactive, highlighting an opportunity to improve activation campaigns. The delinquency rate provides a baseline credit risk metric for ongoing portfolio monitoring.
+
+### Business Recommendations
+
+- Increase marketing efforts for Gold and Platinum cards to improve premium product adoption.
+- Launch customer activation campaigns to increase first-time card usage.
+- Focus customer retention initiatives on high-value regions such as Texas, New York, and California.
+- Expand digital payment incentives to encourage greater adoption of online transactions.
+- Develop personalized offers for high-income and middle-aged customer segments to maximize revenue growth.
+- Monitor delinquency trends regularly to proactively manage credit risk and maintain portfolio quality.
 
 ## Tools Used
 

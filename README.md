@@ -15,9 +15,12 @@ A credit card company has two kinds of data: information about its customers (ag
 
 ## Business Impact
 
-- Replaces manual, spreadsheet-based reporting with a single connected data model
-- Surfaces revenue and risk by segment (state, occupation, card category, income group) in one place instead of separate exports
-- Makes recurring questions ("how is Blue vs Platinum performing," "which states drive revenue") self-service instead of one-off requests
+- Replaces manual, spreadsheet-based reporting with a single connected data model, so the same numbers don't get recalculated by hand for every request
+- Puts revenue, interest, and risk side by side across every segment a business would actually care about — state, card category, occupation, income group, age group, marital status, dependents, education level, and expenditure type — instead of exporting separate cuts of the data for each one
+- Shows which segments carry the most delinquency risk (by occupation, in the current model) alongside their revenue contribution, so risk and revenue can be weighed together instead of looked at separately
+- Breaks down revenue by payment method (swipe, chip, online) and by expenditure category (bills, grocery, travel, fuel, entertainment), which supports questions about where spending is concentrated, not just how much of it there is
+- Turns recurring questions — "how is Blue vs Platinum performing," "which states drive revenue," "are high-income customers actually the most valuable ones" — into a filter click instead of a new analysis request each time
+- Gives a single source of truth for customer and transaction numbers, so different teams aren't working off different exports of the same underlying data
 
 ## Key Objectives
 

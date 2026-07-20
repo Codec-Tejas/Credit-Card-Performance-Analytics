@@ -109,9 +109,6 @@ README.md
 
 ## Author
 
-**Tejas Salunkhe**  
-Aspiring Data Analyst 
+**Tejas Salunkhe** — Aspiring Data Analyst / Data Engineer
 
-- GitHub: [github.com/TejasML](https://github.com/Codec-Tejas)
-- LinkedIn: [linkedin.com/in/tejas-salunkhe05](https://linkedin.com/in/tejas-salunkhe05)
-- Email: salunkhetejas501@gmail.com
+[GitHub](https://github.com/Codec-Tejas) · [LinkedIn](https://linkedin.com/in/tejas-salunkhe05) · [Email](mailto:salunkhetejas501@gmail.com)

@@ -72,3 +72,21 @@ IGNORE 1 ROWS;
 SELECT * FROM credit_card_details;
 
 
+-- copy credit_card_details table
+
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/credit_card_transactions_weekly_update.csv'
+INTO TABLE credit_card_details
+FIELDS TERMINATED BY ','
+OPTIONALLY ENCLOSED BY '"'
+IGNORE 1 ROWS;
+
+
+-- copy cust_detail table
+
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/customer_details_weekly_update.csv'
+INTO TABLE cust_detail
+FIELDS TERMINATED BY ','
+OPTIONALLY ENCLOSED BY '"'
+IGNORE 1 ROWS;
+
+

@@ -1,325 +1,75 @@
-# Credit Card Performance Analysis Dashboard
+# Credit Card Customer & Transaction Analytics
 
-## Project Overview
+A Power BI reporting solution built on a MySQL data warehouse, designed to give a credit card business a unified view of revenue, transaction activity, customer risk, and engagement.
 
-The **Credit Card Performance Analysis Dashboard** is a Business Intelligence project designed to analyze credit card customer behavior, transaction trends, revenue, and key business performance metrics.
+## Business Problem
 
-The project follows a complete ETL and visualization workflow:
+Credit card issuers generate two separate streams of data: customer demographic/profile information and weekly card transaction activity. Kept in separate systems, this data can't answer basic business questions — which customer segments drive revenue, which card categories are underperforming, where delinquency risk is concentrated — without manual, repeated effort. This project consolidates both data streams into a single database and reporting layer so those questions can be answered on demand.
 
-- Import CSV datasets into MySQL
-- Create relational database tables
-- Load data into MySQL
-- Connect MySQL with Power BI
-- Build an interactive two-page dashboard for business insights
+## Target Users
 
----
+- Business and finance teams tracking revenue and interest performance
+- Marketing and product teams segmenting customers by demographics, income, and card category
+- Risk and credit teams monitoring activation and delinquency rates
+- Leadership reviewing overall portfolio health
 
-# Project Architecture
+## Business Impact
 
-```text
-CSV Files
-     │
-     ▼
-MySQL Database
-(Create Tables)
-     │
-     ▼
-Import CSV Data
-     │
-     ▼
-Power BI
-(MySQL Connector)
-     │
-     ▼
-Interactive Dashboard
+- Replaces manual, spreadsheet-based reporting with a single connected data model
+- Surfaces revenue and risk by segment (state, occupation, card category, income group) in one place instead of separate exports
+- Makes recurring questions ("how is Blue vs Platinum performing," "which states drive revenue") self-service instead of one-off requests
+
+## Key Objectives
+
+- Centralize customer and transaction data in a relational database rather than flat files
+- Build a data model that supports slicing revenue and risk by demographic and card attributes
+- Deliver two focused report pages — customer analytics and transaction analytics — instead of one overloaded dashboard
+- Keep the model simple enough (two tables, one relationship) to be maintainable and easy to extend
+
+## Automation, Time Savings & Decision-Making Benefits
+
+Moving from manual CSV analysis to a MySQL-to-Power BI pipeline automates the parts of reporting that would otherwise be repeated by hand:
+
+- **Automation** — data is loaded once via `LOAD DATA INFILE` and refreshed through Power BI rather than re-processed in spreadsheets each time
+- **Time savings** — filtering by quarter, card category, or gender is a slicer click instead of rebuilding a pivot table or query
+- **Decision-making** — metrics like activation rate and delinquency rate are visible continuously rather than calculated on request, so trends can be caught earlier
+
+Cost reduction and customer experience improvements would depend on how this is deployed inside an actual business (e.g., reduced analyst hours, faster response to at-risk segments) — this project demonstrates the reporting foundation those gains would be built on, rather than measuring them directly, since it runs on synthetic data.
+
+## System Architecture & Data Flow
+
+The pipeline has two layers: storage and reporting.
+
+**1. Storage layer (MySQL)**
+The data is held in two MySQL tables:
+- `cust_detail` — one row per customer, holding demographic and profile attributes
+- `credit_card_details` — one row per customer per week, holding card, credit, and transaction attributes
+
+Both tables share `Client_Num` as a common key, giving a 1:1 relationship between a customer and their card/transaction record.
+
+**2. Reporting layer (Power BI)**
+Power BI connects directly to the MySQL database and imports both tables. The relationship on `Client_Num` is preserved in the model, and a calculated `AgeGroup` column is added on the customer table for demographic bucketing. From this model, two report pages are built:
+- **Customer Analytics** — revenue and risk viewed through the customer lens (age, income, occupation, marital status, state)
+- **Transaction Analytics** — revenue and volume viewed through the transaction lens (card category, payment method, expenditure type, quarter)
+
+Shared slicers (quarter, week, card category, gender) let a user filter both the customer and transaction context consistently across either page.
+
+As new weekly data is added to the MySQL database, the report reflects it on refresh, so the dashboards stay current without rebuilding the model.
+
+```
+MySQL database → Power BI (Import, 1:1 relationship on Client_Num) → Two report pages
 ```
 
----
+## Tools Used
 
-# Dataset
+- MySQL — data storage and modeling
+- Power BI — data connection, DAX, and visualization
 
-The project uses two CSV files:
+## Repository Structure
 
-- `credit_card.csv`
-- `customer.csv`
-
-These datasets contain customer details and credit card transaction information.
-
----
-
-# Technologies Used
-
-| Tool | Purpose |
-|------|----------|
-| MySQL | Database Storage |
-| SQL | Table Creation & Data Management |
-| Power BI | Dashboard & Visualization |
-| CSV Files | Source Data |
-
----
-
-# Step 1: Create Database
-
-Create a new database in MySQL.
-
-```sql
-CREATE DATABASE credit_card_db;
-
-USE credit_card_db;
 ```
-
----
-
-# Step 2: Create Tables
-
-Create the required tables before importing the CSV files.
-
-Example:
-
-```sql
-CREATE TABLE customer (
-    Client_Num INT PRIMARY KEY,
-    Customer_Age INT,
-    Gender VARCHAR(20),
-    Dependent_Count INT,
-    Education_Level VARCHAR(50),
-    Marital_Status VARCHAR(30),
-    Income_Category VARCHAR(50),
-    Card_Category VARCHAR(50)
-);
+dataset/    raw CSV files
+sql/        database setup and import script
+reports/    Power BI dashboard screenshots
+README.md
 ```
-
-```sql
-CREATE TABLE credit_card (
-    Client_Num INT,
-    Card_Category VARCHAR(50),
-    Annual_Fees DECIMAL(10,2),
-    Activation_30_Days INT,
-    Customer_Acq_Cost DECIMAL(10,2),
-    Week_Start_Date DATE,
-    Week_Num VARCHAR(10),
-    Qtr VARCHAR(10),
-    Current_Year INT,
-    Credit_Limit DECIMAL(12,2),
-    Total_Revolving_Bal DECIMAL(12,2),
-    Total_Trans_Amt DECIMAL(12,2),
-    Total_Trans_Vol INT,
-    Avg_Utilization_Ratio DECIMAL(10,4),
-    Use_Chip VARCHAR(20),
-    Exp_Type VARCHAR(50),
-    Interest_Earned DECIMAL(12,2),
-    Delinquent_Acc INT
-);
-```
-
----
-
-# Step 3: Import CSV Files into MySQL
-
-Import the CSV files using MySQL Workbench.
-
-### Method
-
-1. Open MySQL Workbench
-2. Right-click the table
-3. Select **Table Data Import Wizard**
-4. Choose the CSV file
-5. Map the columns
-6. Finish the import process
-
-Repeat the same process for both datasets.
-
----
-
-# Step 4: Verify Imported Data
-
-Run SQL queries to verify the imported records.
-
-```sql
-SELECT * FROM customer;
-
-SELECT * FROM credit_card;
-```
-
----
-
-# Step 5: Connect MySQL with Power BI
-
-1. Open Power BI Desktop.
-2. Select **Get Data**.
-3. Choose **MySQL Database**.
-4. Enter:
-   - Server Name
-   - Database Name
-5. Authenticate using MySQL credentials.
-6. Load the required tables into Power BI.
-
----
-
-# Step 6: Data Modeling
-
-Create relationships between tables using the common key:
-
-```text
-Customer[Client_Num]
-        │
-        ▼
-Credit_Card[Client_Num]
-```
-
-Relationship Type:
-
-- One-to-Many
-- Single Direction
-
----
-
-# Dashboard Pages
-
-## Page 1 — Credit Card Performance Overview
-
-This dashboard provides an overview of business performance using key metrics.
-
-### KPIs
-
-- Total Revenue
-- Total Interest Earned
-- Total Transaction Amount
-- Total Transaction Volume
-- Total Customers
-
-### Visualizations
-
-- Revenue by Card Category
-- Revenue by Expenditure Type
-- Quarterly Revenue Trend
-- Weekly Revenue Trend
-- Revenue by Gender
-- Revenue by Income Category
-- Revenue by Education Level
-
----
-
-## Page 2 — Customer Insights Dashboard
-
-This dashboard focuses on customer segmentation and behavior.
-
-### KPIs
-
-- Customer Count
-- Average Credit Limit
-- Average Utilization Ratio
-- Total Delinquent Accounts
-
-### Visualizations
-
-- Customer Distribution by Age Group
-- Customer Distribution by Marital Status
-- Revenue by State
-- Revenue by Gender
-- Revenue by Card Category
-- Credit Limit Analysis
-- Transaction Analysis
-
----
-
-# Key Business Insights
-
-The dashboard helps answer business questions such as:
-
-- Which card category generates the highest revenue?
-- Which customer segment contributes the most revenue?
-- What is the transaction trend over time?
-- Which expenditure type has the highest spending?
-- How does revenue vary by gender and income category?
-- Which regions generate the highest revenue?
-- What is the customer utilization ratio?
-- How many delinquent accounts exist?
-
----
-
-# Power BI Features Used
-
-- KPI Cards
-- Bar Charts
-- Column Charts
-- Line Charts
-- Donut Charts
-- Map Visuals
-- Slicers
-- Matrix Tables
-- Data Modeling
-- DAX Measures
-- Interactive Filters
-
----
-
-# Project Workflow
-
-```text
-CSV Files
-      │
-      ▼
-Create MySQL Database
-      │
-      ▼
-Create SQL Tables
-      │
-      ▼
-Import CSV Data
-      │
-      ▼
-Validate Data
-      │
-      ▼
-Connect MySQL to Power BI
-      │
-      ▼
-Data Modeling
-      │
-      ▼
-Build Dashboard
-      │
-      ▼
-Generate Business Insights
-```
-
----
-
-# Folder Structure
-
-```text
-Credit-Card-Performance-Analysis/
-│
-├── Dataset/
-│   ├── customer.csv
-│   └── credit_card.csv
-│
-├── SQL/
-│   ├── create_database.sql
-│   ├── create_tables.sql
-│   └── import_data.sql
-│
-├── PowerBI/
-│   └── Credit_Card_Performance.pbix
-│
-├── Images/
-│   ├── Dashboard_Page1.png
-│   └── Dashboard_Page2.png
-│
-└── README.md
-```
-
----
-
-# Conclusion
-
-This project demonstrates an end-to-end Business Intelligence workflow by integrating **MySQL** and **Power BI**. Raw CSV data is transformed into a structured relational database, connected to Power BI for interactive analysis, and presented through a two-page dashboard that delivers meaningful insights into credit card performance, customer behavior, revenue trends, and transaction analytics.
-
----
-
-## Author
-
-**Your Name**
-
-Data Analyst | SQL | MySQL | Power BI | Business Intelligence

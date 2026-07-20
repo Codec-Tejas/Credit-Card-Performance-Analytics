@@ -4,7 +4,7 @@ A Power BI reporting solution built on a MySQL data warehouse, designed to give 
 
 ## Business Problem
 
-Credit card issuers generate two separate streams of data: customer demographic/profile information and weekly card transaction activity. Kept in separate systems, this data can't answer basic business questions — which customer segments drive revenue, which card categories are underperforming, where delinquency risk is concentrated — without manual, repeated effort. This project consolidates both data streams into a single database and reporting layer so those questions can be answered on demand.
+A credit card company has two kinds of data: information about its customers (age, income, job, location) and information about their card transactions (spending, revenue, missed payments). This data is usually stored in separate files, so it's hard to answer simple business questions like: Do high-income customers actually bring in more revenue? Which job types or states have the most missed payments? Which card type is really the most profitable? Every time someone wants to answer a question like this, they have to manually combine the two files and go through the numbers again. This project fixes that by loading both files into one database, connecting them by customer ID, and building a Power BI report on top. Now these questions can be answered by filtering a dashboard instead of redoing the work each time.
 
 ## Target Users
 

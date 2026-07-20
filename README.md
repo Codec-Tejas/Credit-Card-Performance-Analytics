@@ -13,6 +13,23 @@ A credit card company has two kinds of data: information about its customers (ag
 - Risk and credit teams monitoring activation and delinquency rates
 - Leadership reviewing overall portfolio health
 
+## Key Objectives
+
+- Centralize customer and transaction data in a relational database rather than flat files
+- Build a data model that supports slicing revenue and risk by demographic and card attributes
+- Deliver two focused report pages — customer analytics and transaction analytics — instead of one overloaded dashboard
+- Keep the model simple enough (two tables, one relationship) to be maintainable and easy to extend
+
+## Automation, Time Savings & Decision-Making Benefits
+
+Moving from manual CSV analysis to a MySQL-to-Power BI pipeline automates the parts of reporting that would otherwise be repeated by hand:
+
+- **Automation** — data is loaded once via `LOAD DATA INFILE` and refreshed through Power BI rather than re-processed in spreadsheets each time
+- **Time savings** — filtering by quarter, card category, or gender is a slicer click instead of rebuilding a pivot table or query
+- **Decision-making** — metrics like activation rate and delinquency rate are visible continuously rather than calculated on request, so trends can be caught earlier
+
+Cost reduction and customer experience improvements would depend on how this is deployed inside an actual business (e.g., reduced analyst hours, faster response to at-risk segments) — this project demonstrates the reporting foundation those gains would be built on, rather than measuring them directly, since it runs on synthetic data.
+
 ## Business Insights
 
 The Credit Card Analytics Dashboard provides an executive-level view of customer behavior, transaction performance, revenue generation, and portfolio health. Built in Power BI, it lets stakeholders monitor KPIs, identify revenue drivers, and support data-driven decisions across the business.
